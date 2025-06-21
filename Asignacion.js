@@ -31,6 +31,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
 // --- FUNCIONES PARA MANIPULAR LA INTERFAZ DE USUARIO (UI) ---
 
+/**
+ * Crea o redibuja la tabla de costos en el HTML.
+ * La tabla se basa en las variables globales `numFilas` y `numColumnas`.
+ * Cada celda contiene un input numérico con un valor aleatorio inicial.
+ */
 function dibujarTabla() {
   const tablaElemento = document.getElementById("matrizCostos");
   tablaElemento.innerHTML = "";
@@ -44,6 +49,10 @@ function dibujarTabla() {
   }
 }
 
+/**
+ * Incrementa el número de filas de la matriz, si no se ha alcanzado el límite de 6.
+ * Luego, vuelve a dibujar la tabla para reflejar el cambio.
+ */
 function anadirFila() {
   if (numFilas < 6) {
     numFilas++;
@@ -53,6 +62,10 @@ function anadirFila() {
   }
 }
 
+/**
+ * Incrementa el número de columnas de la matriz, si no se ha alcanzado el límite de 6.
+ * Luego, vuelve a dibujar la tabla para reflejar el cambio.
+ */
 function anadirColumna() {
   if (numColumnas < 6) {
     numColumnas++;
@@ -63,6 +76,10 @@ function anadirColumna() {
   }
 }
 
+/**
+ * Reduce el número de filas de la matriz, siempre que haya más de una.
+ * Luego, vuelve a dibujar la tabla.
+ */
 function eliminarFila() {
   if (numFilas > 1) {
     numFilas--;
@@ -70,6 +87,10 @@ function eliminarFila() {
   }
 }
 
+/**
+ * Reduce el número de columnas de la matriz, siempre que haya más de una.
+ * Luego, vuelve a dibujar la tabla.
+ */
 function eliminarColumna() {
   if (numColumnas > 1) {
     numColumnas--;
@@ -77,6 +98,10 @@ function eliminarColumna() {
   }
 }
 
+/**
+ * Lee los valores de la tabla HTML y los convierte en una matriz numérica (un array de arrays).
+ * @returns {number[][]} La matriz de costos/beneficios ingresada por el usuario.
+ */
 function obtenerMatrizDeEntrada() {
   const filasTabla = document.querySelectorAll("#matrizCostos tr");
   return Array.from(filasTabla, (fila) =>
@@ -84,12 +109,23 @@ function obtenerMatrizDeEntrada() {
   );
 }
 
+/**
+ * Muestra los pasos de la resolución en el área de texto designada en el HTML.
+ * @param {string[]} pasos - Un array de strings, donde cada string es una línea de texto.
+ */
 function mostrarPasosEnLog(pasos) {
   document.getElementById("logDePasos").textContent = pasos.join("\n");
 }
 
 // --- LÓGICA CENTRAL DEL MÉTODO HÚNGARO (MODIFICADA) ---
 
+/**
+ * Orquesta la ejecución completa del Método Húngaro.
+ * Obtiene la matriz, la transforma si es de maximización, la equilibra con ficticios,
+ * y aplica los pasos del algoritmo (reducir, cubrir ceros, ajustar matriz) hasta
+ * encontrar la asignación óptima. Todos los pasos se registran para mostrarlos.
+ * @param {boolean} esMaximizacion - Define si el problema es de maximización o minimización.
+ */
 function resolverMetodoHungaro(esMaximizacion) {
   const registroPasos = ["--- Inicio del Proceso del Método Húngaro ---"];
 
@@ -215,6 +251,13 @@ function resolverMetodoHungaro(esMaximizacion) {
   mostrarPasosEnLog(registroPasos);
 }
 
+/**
+ * Encuentra el número mínimo de líneas para cubrir todos los ceros en la matriz.
+ * Este es un paso fundamental del algoritmo que determina si se ha alcanzado la solución óptima.
+ * Utiliza un sistema de marcado de ceros (estrellados y primados) para lograrlo.
+ * @param {number[][]} matriz - La matriz de costos actual.
+ * @returns {{coberturas: object, cerosEstrellados: object}} Un objeto con las líneas de cobertura y las asignaciones (ceros estrellados).
+ */
 function encontrarLineasMinimas(matriz) {
   const dimension = matriz.length;
   const cerosEstrellados = {};
@@ -290,6 +333,13 @@ function encontrarLineasMinimas(matriz) {
   };
 }
 
+/**
+ * Busca en la matriz un cero que no esté cubierto por ninguna línea.
+ * @param {number[][]} matriz - La matriz de trabajo actual.
+ * @param {boolean[]} filasCubiertas - Array que indica qué filas están cubiertas.
+ * @param {boolean[]} columnasCubiertas - Array que indica qué columnas están cubiertas.
+ * @returns {number[]|null} Las coordenadas [fila, columna] del cero encontrado, o null si no existe.
+ */
 function buscarCeroNoCubierto(matriz, filasCubiertas, columnasCubiertas) {
   for (let i = 0; i < matriz.length; i++) {
     if (!filasCubiertas[i]) {
@@ -301,6 +351,14 @@ function buscarCeroNoCubierto(matriz, filasCubiertas, columnasCubiertas) {
   return null;
 }
 
+/**
+ * Ajusta la matriz cuando no se encuentra una solución óptima (el número de líneas es menor que la dimensión).
+ * Encuentra el valor mínimo no cubierto, lo resta de todos los elementos no cubiertos y
+ * lo suma a los elementos cubiertos por dos líneas. Esto genera nuevos ceros para la siguiente iteración.
+ * @param {number[][]} matriz - La matriz de trabajo que se va a ajustar.
+ * @param {{fila: boolean[], columna: boolean[]}} coberturas - Objeto con las filas y columnas cubiertas.
+ * @param {string[]} registroPasos - El log de pasos para registrar la operación.
+ */
 function ajustarMatriz(matriz, coberturas, registroPasos) {
   const dimension = matriz.length;
   let minimoNoCubierto = Infinity;
