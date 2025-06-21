@@ -4,7 +4,7 @@
  * @param {boolean} esMaximizacion - 'true' para maximización, 'false' para minimización.
  */
 
-// Estado inicial de la matriz
+// Estado inicial de la matriz (inicia desde 1 fila 1 columna)
 let numFilas = 1;
 let numColumnas = 1;
 
