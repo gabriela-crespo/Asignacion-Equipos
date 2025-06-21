@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Optimizador de Asignaciones</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <main class="contenedor-principal">
+      <header>
+        <h1>Optimizacion de Asignaciones</h1>
+        <p>Utiliza el Método Húngaro para resolver problemas de asignación.</p>
+      </header>
+
+      <section class="panel-de-controles">
+        <div class="grupo-controles">
+          <p class="grupo-titulo">Metodo Hungaro</p>
+          <button id="agregarFila">+ Mas Filas</button>
+          <button id="agregarColumna">+ Mas Columnas</button>
+          <button id="quitarFila">- Quitar Fila</button>
+          <button id="quitarColumna">- Quitar Columna</button>
+        </div>
+        <div class="grupo-controles">
+          <p class="grupo-titulo">Acciones de Cálculo</p>
+          <button id="calcularMinimo" class="btn-accion">
+            Optimizar para Costo Mínimo
+          </button>
+          <button id="calcularMaximo" class="btn-accion">
+            Optimizar para Beneficio Máximo
+          </button>
+        </div>
+      </section>
+
+      <section class="area-matriz">
+        <p>Define la matriz de costos/beneficios:</p>
+        <table id="matrizCostos"></table>
+      </section>
+
+      <section class="area-resultados">
+        <h2>Pasos de la Solución</h2>
+        <pre id="logDePasos"></pre>
+      </section>
+    </main>
+    <script src="Asignacion.js"></script>
+  </body>
+</html>
